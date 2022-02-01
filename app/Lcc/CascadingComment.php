@@ -6,17 +6,25 @@ class CascadingComment
 {
     public readonly bool $is_perfect;
 
+    public readonly array $lines;
+
+    public readonly int $lines_count;
+
     public function __construct($string)
     {
-        $this->is_perfect = $this->isPerfect($string);
-    }
+        $this->lines = explode("\n", $string);
 
-    private function isPerfect($string)
-    {
-        $lines = explode("\n", $string);
+        $this->lines_count = count($this->lines);
 
         // This is not actually a rule, just a sanity check.
-        throw_if(count($lines) !== 3 && count($lines) !== 4, 'Invalid cascading comment length, expected 3 or 4 lines, actual: '.count($lines));
+        throw_if($this->lines_count !== 3 && $this->lines_count !== 4, 'Invalid cascading comment length, expected 3 or 4 lines, actual: '.$this->lines_count);
+
+        $this->is_perfect = $this->isPerfect();
+    }
+
+    private function isPerfect()
+    {
+        $lines = $this->lines;
 
         $previousLineLength = mb_strlen(
             array_shift($lines)
@@ -41,5 +49,10 @@ class CascadingComment
         $lastCharacter = mb_substr($lastLine, -1);
 
         return in_array($lastCharacter, ['.', '!']);
+    }
+
+    public function toString()
+    {
+        return implode("\n", $this->lines);
     }
 }
