@@ -10,7 +10,7 @@ $rules = [
     'array_syntax' => ['syntax' => 'short'],
     'binary_operator_spaces' => ['default' => 'single_space'],
     'cast_spaces' => ['space' => 'single'],
-    'class_attributes_separation' => ['elements' => ['const', 'method', 'property']],
+    'class_attributes_separation' => ['elements' => ['const' => 'one', 'method' => 'one', 'property' => 'one']],
     'compact_nullable_typehint' => true,
     'concat_space' => ['spacing' => 'none'],
     'function_typehint_space' => true,
@@ -20,7 +20,7 @@ $rules = [
     'lowercase_static_reference' => true,
     'magic_constant_casing' => true,
     'magic_method_casing' => true,
-    'method_argument_space' => ['ensure_fully_multiline' => false],
+    'method_argument_space' => ['on_multiline' => 'ensure_fully_multiline'],
     'method_chaining_indentation' => true,
     'multiline_whitespace_before_semicolons' => ['strategy' => 'no_multi_line'],
     'native_function_casing' => true,
@@ -37,10 +37,10 @@ $rules = [
         'throw',
         'use',
     ]],
-    'no_multiline_whitespace_before_semicolons' => true,
+    'multiline_whitespace_before_semicolons' => true,
     'no_null_property_initialization' => true,
     'no_short_bool_cast' => true,
-    'no_short_echo_tag' => true,
+    'echo_tag_syntax' => true,
     'no_singleline_whitespace_before_semicolons' => true,
     'no_spaces_around_offset' => true,
     'no_trailing_comma_in_singleline_array' => true,
@@ -52,9 +52,9 @@ $rules = [
     'short_scalar_cast' => true,
     'single_blank_line_before_namespace' => true,
     'single_quote' => true,
-    'trailing_comma_in_multiline_array' => true,
+    'trailing_comma_in_multiline' => true,
     'trim_array_spaces' => true,
-    'visibility_required' => ['property'], // test methods are written without declaring visibility
+    'visibility_required' => ['elements' => ['property']], // test methods are written without declaring visibility
 ];
 
 $finder = PhpCsFixer\Finder::create()
@@ -69,7 +69,7 @@ $finder = PhpCsFixer\Finder::create()
         'vendor',
     ]);
 
-return PhpCsFixer\Config::create()
+return (new PhpCsFixer\Config)
     ->setUsingCache(false)
     ->setRiskyAllowed(true)
     ->setRules($rules)

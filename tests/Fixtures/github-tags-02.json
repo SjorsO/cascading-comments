@@ -1,0 +1,49 @@
+{
+    "data": {
+        "repository": {
+            "refs": {
+                "edges": [
+                    {
+                        "cursor": "NA",
+                        "node": {
+                            "id": "MDM6UmVmNzU0ODk4NjpyZWZzL3RhZ3MvdjQuMC4wLUJFVEEy",
+                            "name": "v4.0.0-BETA2",
+                            "target": {
+                                "id": "MDY6Q29tbWl0NzU0ODk4Njo5MWM3MTY2MTgyNzEzNmRjODIxNTljZjgzM2FmZjg3MTI0N2M4MDA5",
+                                "committedDate": "2013-02-08T16:27:25Z",
+                                "oid": "91c71661827136dc82159cf833aff871247c8009",
+                                "tarballUrl": "https://codeload.github.com/laravel/framework/legacy.tar.gz/91c71661827136dc82159cf833aff871247c8009"
+                            }
+                        }
+                    },
+                    {
+                        "cursor": "NQ",
+                        "node": {
+                            "id": "MDM6UmVmNzU0ODk4NjpyZWZzL3RhZ3MvdjQuMC4wLUJFVEEz",
+                            "name": "v4.0.0-BETA3",
+                            "target": {
+                                "id": "MDY6Q29tbWl0NzU0ODk4Njo2N2Y3MGFmZTFmNGNkYjQ3MmJhNmRjMjhiMDMwOTBlNTE1M2ZiMTY3",
+                                "committedDate": "2013-02-08T21:07:16Z",
+                                "oid": "67f70afe1f4cdb472ba6dc28b03090e5153fb167",
+                                "tarballUrl": "https://codeload.github.com/laravel/framework/legacy.tar.gz/67f70afe1f4cdb472ba6dc28b03090e5153fb167"
+                            }
+                        }
+                    },
+                    {
+                        "cursor": "Ng",
+                        "node": {
+                            "id": "MDM6UmVmNzU0ODk4NjpyZWZzL3RhZ3MvdjQuMC4wLUJFVEE0",
+                            "name": "v4.0.0-BETA4",
+                            "target": {
+                                "id": "MDY6Q29tbWl0NzU0ODk4NjoyYzFkNjQ1NjhiY2EyOTE1MzViYTgxNmE2NmY3MTMwNmM3ZWJjZjU1",
+                                "committedDate": "2013-03-29T15:28:16Z",
+                                "oid": "2c1d64568bca291535ba816a66f71306c7ebcf55",
+                                "tarballUrl": "https://codeload.github.com/laravel/framework/legacy.tar.gz/2c1d64568bca291535ba816a66f71306c7ebcf55"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}
