@@ -28,6 +28,6 @@ class TagRecord
 
         $this->commitHash = $data['node']['target']['oid'];
 
-        $this->downloadUrl = $data['node']['target']['tarballUrl'];
+        $this->downloadUrl = $data['node']['target']['zipballUrl'];
     }
 }

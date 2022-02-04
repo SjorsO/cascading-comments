@@ -41,7 +41,7 @@ class GithubApi
                                         id
                                         committedDate
                                         oid
-                                        tarballUrl
+                                        zipballUrl
                                     }
                                 }
                             }
@@ -70,7 +70,7 @@ class GithubApi
     private function query($query)
     {
         return Http::withToken($this->token)
-            ->retry(2, 5000)
+            ->retry(2, app()->runningUnitTests() ? 5 : 5000)
             ->timeout(5)
             ->post('https://api.github.com/graphql', [
                 'query' => $query,

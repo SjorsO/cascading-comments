@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Validator;
@@ -23,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
         Validator::excludeUnvalidatedArrayKeys();
 
         Relation::enforceMorphMap([
-            //
+            1 => User::class,
         ]);
     }
 }

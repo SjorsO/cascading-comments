@@ -2,17 +2,25 @@
 
 namespace Database\Seeders;
 
+use App\Models\Repository;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     *
-     * @return void
-     */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        Repository::create([
+            'owner' => 'laravel',
+            'name' => 'laravel',
+            'next_poll_at' => now()->startOfDay(),
+            'last_polled_at' => now()->subYear()->startOfYear(),
+        ]);
+
+        Repository::create([
+            'owner' => 'laravel',
+            'name' => 'framework',
+            'next_poll_at' => now()->startOfDay(),
+            'last_polled_at' => now()->subYear()->startOfYear(),
+        ]);
     }
 }
