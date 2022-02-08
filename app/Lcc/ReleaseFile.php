@@ -4,12 +4,12 @@ namespace App\Lcc;
 
 use Illuminate\Support\Str;
 
-class FrameworkFile
+class ReleaseFile
 {
     /** @var CascadingComment[] */
     private $comments = [];
 
-    public function __construct($contents)
+    public function __construct(public $filePath, public int $zipIndex, $contents)
     {
         $lines = array_map(function ($line) {
             $line = trim($line);
@@ -19,7 +19,9 @@ class FrameworkFile
 
         $chunk = [];
 
-        foreach ($lines as $line) {
+        $chunkStartsAtLineNumber = null;
+
+        foreach ($lines as $lineNumber => $line) {
             if (! $chunk && ! $line) {
                 continue;
             }
@@ -30,15 +32,22 @@ class FrameworkFile
                 if ($candidate->isActuallyACascadingComment) {
                     $this->comments[] = new CascadingComment(
                         $candidate->toString(),
+                        $chunkStartsAtLineNumber
                     );
                 }
 
                 $chunk = [];
 
+                $chunkStartsAtLineNumber = null;
+
                 continue;
             }
 
             if ($line) {
+                if ($chunkStartsAtLineNumber === null) {
+                    $chunkStartsAtLineNumber = $lineNumber;
+                }
+
                 $chunk[] = $line;
             }
         }

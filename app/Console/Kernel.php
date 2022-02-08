@@ -2,8 +2,9 @@
 
 namespace App\Console;
 
-use App\Jobs\DownloadReleaseZipsJob;
+use App\Jobs\DownloadReleaseJob;
 use App\Jobs\PollReleasesJob;
+use App\Jobs\ProcessReleaseJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -13,6 +14,8 @@ class Kernel extends ConsoleKernel
     {
         $schedule->call(fn () => PollReleasesJob::run())->everyMinute();
 
-        $schedule->call(fn () => DownloadReleaseZipsJob::run())->everyMinute();
+        $schedule->call(fn () => DownloadReleaseJob::run())->everyMinute();
+
+        $schedule->call(fn () => ProcessReleaseJob::run())->everyMinute();
     }
 }

@@ -16,8 +16,8 @@ class CreateReleasesTable extends Migration
             $table->string('commit_hash')->unique();
             $table->string('download_url');
             $table->dateTime('published_at');
-            $table->boolean('is_processed')->default(false);
             $table->boolean('has_downloaded_release')->default(false);
+            $table->boolean('is_processed')->default(false);
             $table->timestamps();
         });
     }

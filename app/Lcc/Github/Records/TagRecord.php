@@ -6,15 +6,15 @@ use Carbon\Carbon;
 
 class TagRecord
 {
-    public readonly string $name;
+    public string $name;
 
-    public readonly string $formattedName;
+    public string $formattedName;
 
-    public readonly string $commitHash;
+    public string $commitHash;
 
-    public readonly string $downloadUrl;
+    public string $downloadUrl;
 
-    public readonly Carbon $publishedAt;
+    public Carbon $publishedAt;
 
     public function __construct($data)
     {

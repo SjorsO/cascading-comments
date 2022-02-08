@@ -11,4 +11,6 @@ use Illuminate\Queue\SerializesModels;
 abstract class BaseJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    public $uniqueFor = 300;
 }

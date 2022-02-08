@@ -3,10 +3,11 @@
 namespace App\Jobs;
 
 use App\Models\Release;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
-class DownloadReleaseZipsJob extends BaseJob
+class DownloadReleaseJob extends BaseJob implements ShouldBeUnique
 {
     public function __construct(public Release $release)
     {
@@ -30,15 +31,20 @@ class DownloadReleaseZipsJob extends BaseJob
         $this->release->update(['has_downloaded_release' => true]);
     }
 
+    public function uniqueId()
+    {
+        return $this->release->id;
+    }
+
     public static function run()
     {
         Release::query()
             ->where('has_downloaded_release', false)
-            ->take(50)
+            ->take(11)
             ->get()
             ->each(function (Release $release, $i) {
-                // Add a delay to each job to prevent rate limit issues.
-                DownloadReleaseZipsJob::dispatch($release)->delay(
+                // Add a delay to each job to prevent potential rate limit issues.
+                DownloadReleaseJob::dispatch($release)->delay(
                     now()->addSeconds($i * 5)
                 );
             });

@@ -4,7 +4,7 @@ namespace App\Lcc;
 
 use Tests\TestCase;
 
-class FrameworkFileTest extends TestCase
+class ReleaseFileTest extends TestCase
 {
     /** @test */
     function it_can_detect_a_comment_in_a_file()
@@ -13,7 +13,7 @@ class FrameworkFileTest extends TestCase
             base_path('server.php')
         );
 
-        $frameworkFile = new FrameworkFile($content);
+        $frameworkFile = new ReleaseFile('index.php', 0, $content);
 
         $comments = $frameworkFile->comments();
 
@@ -23,6 +23,7 @@ class FrameworkFileTest extends TestCase
 
         $this->assertTrue($comment->is_perfect);
         $this->assertSame(3, $comment->lines_count);
+        $this->assertSame(13, $comment->startsAtLineNumber);
 
         $this->assertSame(<<<COMMENT
         This file allows us to emulate Apache's "mod_rewrite" functionality from the
@@ -38,7 +39,7 @@ class FrameworkFileTest extends TestCase
             base_path('phpunit.xml')
         );
 
-        $frameworkFile = new FrameworkFile($content);
+        $frameworkFile = new ReleaseFile('index.php', 0, $content);
 
         $this->assertCount(0, $frameworkFile->comments());
     }
@@ -50,7 +51,7 @@ class FrameworkFileTest extends TestCase
             base_path('artisan')
         );
 
-        $frameworkFile = new FrameworkFile($content);
+        $frameworkFile = new ReleaseFile('index.php', 0, $content);
 
         $comments = $frameworkFile->comments();
 

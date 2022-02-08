@@ -14,11 +14,11 @@ class CascadingCommentCandidate
         '| ',
     ];
 
-    public readonly CommentType $type;
+    public CommentType $type;
 
-    public readonly array $lines;
+    public array $lines;
 
-    public readonly bool $isActuallyACascadingComment;
+    public bool $isActuallyACascadingComment;
 
     public function __construct($lines)
     {

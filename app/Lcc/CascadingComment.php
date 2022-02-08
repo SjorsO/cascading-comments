@@ -4,13 +4,13 @@ namespace App\Lcc;
 
 class CascadingComment
 {
-    public readonly bool $is_perfect;
+    public bool $is_perfect;
 
-    public readonly array $lines;
+    public array $lines;
 
-    public readonly int $lines_count;
+    public int $lines_count;
 
-    public function __construct($string)
+    public function __construct($string, public int $startsAtLineNumber)
     {
         $this->lines = explode("\n", $string);
 

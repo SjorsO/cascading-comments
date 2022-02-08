@@ -12,7 +12,7 @@ class CascadingCommentTest extends TestCase
      */
     function it_recognizes_a_perfect_comment($string)
     {
-        $cascadingComment = new CascadingComment($string);
+        $cascadingComment = new CascadingComment($string, 0);
 
         $this->assertTrue($cascadingComment->is_perfect);
     }
@@ -23,7 +23,7 @@ class CascadingCommentTest extends TestCase
      */
     function it_recognizes_an_imperfect_comment($string)
     {
-        $cascadingComment = new CascadingComment($string);
+        $cascadingComment = new CascadingComment($string, 0);
 
         $this->assertFalse($cascadingComment->is_perfect);
     }

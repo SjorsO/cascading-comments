@@ -28,7 +28,7 @@ class DownloadReleaseJobTest extends TestCase
 
         $release2->update(['has_downloaded_release' => true]);
 
-        DownloadReleaseZipsJob::run();
+        DownloadReleaseJob::run();
 
         $this->assertTrue($release1->refresh()->has_downloaded_release);
         Storage::assertExists($release1->zip_storage_path);
@@ -40,6 +40,6 @@ class DownloadReleaseJobTest extends TestCase
 
         // All releases have been downloaded. Running the job again won't make any HTTP calls (if
         // it does, the fake sequence will fail).
-        DownloadReleaseZipsJob::run();
+        DownloadReleaseJob::run();
     }
 }
