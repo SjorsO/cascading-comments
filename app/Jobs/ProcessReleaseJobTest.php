@@ -38,4 +38,20 @@ class ProcessReleaseJobTest extends TestCase
         $this->assertSame(12, $comment3->starts_at_line_number);
         $this->assertTrue($comment3->is_perfect);
     }
+
+    /** @test */
+    function it_can_process_a_real_release()
+    {
+        $release = CreatesModels::release(
+            base_path('tests/Fixtures/zips/laravel-8.6.10.zip')
+        );
+
+        ProcessReleaseJob::dispatch($release);
+
+        $this->assertGreaterThan(90, $release->comments->count());
+
+        $this->assertSame(3, $release->comments->min('number_of_lines'));
+        $this->assertSame(4, $release->comments->max('number_of_lines'));
+        $this->assertTrue($release->comments->where('is_perfect', false)->isNotEmpty());
+    }
 }
