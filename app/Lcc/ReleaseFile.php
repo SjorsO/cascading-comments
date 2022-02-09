@@ -32,6 +32,7 @@ class ReleaseFile
                 if ($candidate->isActuallyACascadingComment) {
                     $this->comments[] = new CascadingComment(
                         $candidate->toString(),
+                        $candidate->type,
                         $chunkStartsAtLineNumber
                     );
                 }

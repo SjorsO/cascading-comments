@@ -2,6 +2,7 @@
 
 namespace App\Lcc;
 
+use App\Lcc\Enums\CommentType;
 use Tests\TestCase;
 
 class ReleaseFileTest extends TestCase
@@ -13,7 +14,7 @@ class ReleaseFileTest extends TestCase
             base_path('server.php')
         );
 
-        $frameworkFile = new ReleaseFile('index.php', 0, $content);
+        $frameworkFile = new ReleaseFile('server.php', 0, $content);
 
         $comments = $frameworkFile->comments();
 
@@ -22,6 +23,7 @@ class ReleaseFileTest extends TestCase
         $comment = $comments[0];
 
         $this->assertTrue($comment->is_perfect);
+        $this->assertSame(CommentType::SLASH_COMMENT, $comment->type);
         $this->assertSame(3, $comment->lines_count);
         $this->assertSame(13, $comment->startsAtLineNumber);
 
@@ -51,7 +53,7 @@ class ReleaseFileTest extends TestCase
             base_path('artisan')
         );
 
-        $frameworkFile = new ReleaseFile('index.php', 0, $content);
+        $frameworkFile = new ReleaseFile('artisan', 0, $content);
 
         $comments = $frameworkFile->comments();
 

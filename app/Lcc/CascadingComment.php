@@ -2,6 +2,8 @@
 
 namespace App\Lcc;
 
+use App\Lcc\Enums\CommentType;
+
 class CascadingComment
 {
     public bool $is_perfect;
@@ -10,7 +12,7 @@ class CascadingComment
 
     public int $lines_count;
 
-    public function __construct($string, public int $startsAtLineNumber)
+    public function __construct($string, public CommentType $type, public int $startsAtLineNumber)
     {
         $this->lines = explode("\n", $string);
 

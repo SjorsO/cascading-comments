@@ -13,6 +13,7 @@ class CreateCommentsTable extends Migration
             $table->foreignId('release_id')->constrained()->cascadeOnDelete();
             $table->unsignedInteger('zip_index');
             $table->string('file_path');
+            $table->unsignedSmallInteger('type');
             $table->unsignedInteger('starts_at_line_number');
             $table->unsignedSmallInteger('number_of_lines');
             $table->boolean('is_perfect');

@@ -25,6 +25,7 @@ class ProcessReleaseJob extends BaseJob implements ShouldBeUnique
                 $records[] = [
                     'release_id' => $this->release->id,
                     'file_path' => $file->filePath,
+                    'type' => $comment->type,
                     'starts_at_line_number' => $comment->startsAtLineNumber,
                     'number_of_lines' => $comment->lines_count,
                     'zip_index' => $file->zipIndex,
