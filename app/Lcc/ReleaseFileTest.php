@@ -16,7 +16,7 @@ class ReleaseFileTest extends TestCase
 
         $frameworkFile = new ReleaseFile('server.php', 0, $content);
 
-        $comments = $frameworkFile->comments();
+        $comments = $frameworkFile->comments;
 
         $this->assertCount(1, $comments);
 
@@ -43,11 +43,11 @@ class ReleaseFileTest extends TestCase
 
         $frameworkFile = new ReleaseFile('index.php', 0, $content);
 
-        $this->assertCount(0, $frameworkFile->comments());
+        $this->assertCount(0, $frameworkFile->comments);
     }
 
     /** @test */
-    function it_can_detect_multiple_comments_in_a_file()
+    function it_can_detect_multiple_pipe_comments_in_a_file()
     {
         $content = file_get_contents(
             base_path('artisan')
@@ -55,11 +55,9 @@ class ReleaseFileTest extends TestCase
 
         $frameworkFile = new ReleaseFile('artisan', 0, $content);
 
-        $comments = $frameworkFile->comments();
+        $this->assertCount(3, $frameworkFile->comments);
 
-        $this->assertCount(3, $comments);
-
-        [$comment1, $comment2, $comment3] = $comments;
+        [$comment1, $comment2, $comment3] = $frameworkFile->comments;
 
         $this->assertSame(<<<COMMENT
         Composer provides a convenient, automatically generated class loader
@@ -90,11 +88,9 @@ class ReleaseFileTest extends TestCase
 
         $frameworkFile = new ReleaseFile('LuaScripts.php', 0, $content);
 
-        $comments = $frameworkFile->comments();
+        $this->assertCount(1, $frameworkFile->comments);
 
-        $this->assertCount(1, $comments);
-
-        $comment = $comments[0];
+        $comment = $frameworkFile->comments[0];
 
         $this->assertTrue($comment->is_perfect);
         $this->assertSame(CommentType::LUA_COMMENT, $comment->type);
@@ -132,7 +128,7 @@ class ReleaseFileTest extends TestCase
         }
         CONTENT);
 
-        $this->assertCount(0, $frameworkFile->comments());
+        $this->assertCount(0, $frameworkFile->comments);
     }
 
     /** @test */
@@ -154,7 +150,7 @@ class ReleaseFileTest extends TestCase
         }
         CONTENT);
 
-        $this->assertCount(0, $frameworkFile->comments());
+        $this->assertCount(0, $frameworkFile->comments);
     }
 
     /** @test */
@@ -166,11 +162,11 @@ class ReleaseFileTest extends TestCase
 
         $frameworkFile = new ReleaseFile('Gate.php', 0, $content);
 
-        $this->assertCount(5, $comments = $frameworkFile->comments());
-        $this->assertSame(422, $comments[0]->startsAtLineNumber);
-        $this->assertSame(433, $comments[1]->startsAtLineNumber);
-        $this->assertSame(735, $comments[2]->startsAtLineNumber);
-        $this->assertSame(742, $comments[3]->startsAtLineNumber);
-        $this->assertSame(786, $comments[4]->startsAtLineNumber);
+        $this->assertCount(5, $frameworkFile->comments);
+        $this->assertSame(422, $frameworkFile->comments[0]->startsAtLineNumber);
+        $this->assertSame(433, $frameworkFile->comments[1]->startsAtLineNumber);
+        $this->assertSame(735, $frameworkFile->comments[2]->startsAtLineNumber);
+        $this->assertSame(742, $frameworkFile->comments[3]->startsAtLineNumber);
+        $this->assertSame(786, $frameworkFile->comments[4]->startsAtLineNumber);
     }
 }

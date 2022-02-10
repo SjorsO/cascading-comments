@@ -3,66 +3,44 @@
 namespace App\Lcc;
 
 use App\Lcc\Enums\CommentType;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 class ReleaseFile
 {
     /** @var CascadingComment[] */
-    private $comments = [];
+    public readonly array $comments;
 
     public function __construct(public $filePath, public int $zipIndex, $contents)
     {
-        $lines = explode("\n", $contents);
+        $allLines = explode("\n", $contents);
 
-        $candidateLines = array_map(function ($line) {
-            $line = trim($line);
+        $this->comments = collect($allLines)
+            ->mapToGroups(function ($line, $lineNumber) {
+                static $group = 1;
 
-            return Str::startsWith($line, CommentType::COMMENT_PREFIXES) ? $line : null;
-        }, $lines);
-
-        $candidateCommentLines = [];
-
-        $candidateStartsAtLineNumber = null;
-
-        foreach ($candidateLines as $lineNumber => $line) {
-            if (! $candidateCommentLines && ! $line) {
-                continue;
-            }
-
-            if ($candidateCommentLines && ! $line) {
-                $candidate = new CascadingCommentCandidate(
-                    $candidateCommentLines,
-                    $candidateStartsAtLineNumber,
-                    $lines,
+                return Str::startsWith($trimmed = trim($line), CommentType::COMMENT_PREFIXES)
+                    ? [$group => [$lineNumber => $trimmed]]
+                    : [0 => $group++];
+            })
+            ->forget(0)
+            ->map->mapWithKeys(fn ($group) => $group) // Flatten but keep the array keys
+            ->map(function (Collection $candidateLines) use ($allLines) {
+                return new CascadingCommentCandidate(
+                    $candidateLines->values()->toArray(),
+                    $candidateLines->keys()->first(),
+                    $allLines,
                 );
-
-                if ($candidate->isActuallyACascadingComment) {
-                    $this->comments[] = new CascadingComment(
-                        $candidate->toString(),
-                        $candidate->type,
-                        $candidate->startsAtLineNumber,
-                    );
-                }
-
-                $candidateCommentLines = [];
-
-                $candidateStartsAtLineNumber = null;
-
-                continue;
-            }
-
-            if ($line) {
-                if ($candidateStartsAtLineNumber === null) {
-                    $candidateStartsAtLineNumber = $lineNumber;
-                }
-
-                $candidateCommentLines[] = $line;
-            }
-        }
-    }
-
-    public function comments()
-    {
-        return $this->comments;
+            })
+            ->filter(fn (CascadingCommentCandidate $candidate) => $candidate->isActuallyACascadingComment)
+            ->map(function (CascadingCommentCandidate $candidate) {
+                return new CascadingComment(
+                    $candidate->toString(),
+                    $candidate->type,
+                    $candidate->startsAtLineNumber,
+                );
+            })
+            ->values()
+            ->toArray();
     }
 }

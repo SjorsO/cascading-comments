@@ -21,7 +21,7 @@ class ProcessReleaseJob extends BaseJob implements ShouldBeUnique
         $records = [];
 
         foreach ($this->release->files() as $file) {
-            foreach ($file->comments() as $comment) {
+            foreach ($file->comments as $comment) {
                 $records[] = [
                     'release_id' => $this->release->id,
                     'file_path' => $file->filePath,
