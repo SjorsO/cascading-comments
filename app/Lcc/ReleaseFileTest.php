@@ -80,4 +80,97 @@ class ReleaseFileTest extends TestCase
         down the process. This is the last thing to happen to the request.
         COMMENT, $comment3->toString());
     }
+
+    /** @test */
+    function it_can_detect_lua_comments()
+    {
+        $content = file_get_contents(
+            base_path('tests/Fixtures/files/LuaScripts.php')
+        );
+
+        $frameworkFile = new ReleaseFile('LuaScripts.php', 0, $content);
+
+        $comments = $frameworkFile->comments();
+
+        $this->assertCount(1, $comments);
+
+        $comment = $comments[0];
+
+        $this->assertTrue($comment->is_perfect);
+        $this->assertSame(CommentType::LUA_COMMENT, $comment->type);
+        $this->assertSame(3, $comment->lines_count);
+        $this->assertSame(110, $comment->startsAtLineNumber);
+
+        $this->assertSame(<<<COMMENT
+        If we have values in the array, we will remove them from the first queue
+        and add them onto the destination queue in chunks of 100, which moves
+        all of the appropriate jobs onto the destination queue very safely.
+        COMMENT, $comment->toString());
+    }
+
+    /** @test */
+    function it_ignores_docblocks_as_comments()
+    {
+        $frameworkFile = new ReleaseFile('LuaScripts.php', 0, <<<CONTENT
+        class LuaScripts
+        {
+            /**
+             * Get the Lua script for computing the size of queue.
+             *
+             * KEYS[1] - The name of the primary queue
+             * KEYS[2] - The name of the "delayed" queue
+             * KEYS[3] - The name of the "reserved" queue
+             *
+             * @return string
+             */
+            public static function size()
+            {
+                    return <<<'LUA'
+                    return redis.call('llen', KEYS[1]) + redis.call('zcard', KEYS[2]) + redis.call('zcard', KEYS[3])
+                    LUA;
+            }
+        }
+        CONTENT);
+
+        $this->assertCount(0, $frameworkFile->comments());
+    }
+
+    /** @test */
+    function it_ignores_docblocks_that_dont_have_an_empty_line_before_return()
+    {
+        $frameworkFile = new ReleaseFile('Translator.php', 0, <<<CONTENT
+        /**
+         * Get the translation for the given key.
+         *
+         * @param  string  \$key
+         * @param  array  \$replace
+         * @param  string|null  \$locale
+         * @param  bool  \$fallback
+         * @return string|array
+         */
+        public function get()
+        {
+            //
+        }
+        CONTENT);
+
+        $this->assertCount(0, $frameworkFile->comments());
+    }
+
+    /** @test */
+    function it_correctly_processes_tricky_files()
+    {
+        $content = file_get_contents(
+            base_path('tests/Fixtures/files/Gate.php')
+        );
+
+        $frameworkFile = new ReleaseFile('Gate.php', 0, $content);
+
+        $this->assertCount(5, $comments = $frameworkFile->comments());
+        $this->assertSame(422, $comments[0]->startsAtLineNumber);
+        $this->assertSame(433, $comments[1]->startsAtLineNumber);
+        $this->assertSame(735, $comments[2]->startsAtLineNumber);
+        $this->assertSame(742, $comments[3]->startsAtLineNumber);
+        $this->assertSame(786, $comments[4]->startsAtLineNumber);
+    }
 }

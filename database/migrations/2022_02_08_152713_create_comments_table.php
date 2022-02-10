@@ -17,6 +17,7 @@ class CreateCommentsTable extends Migration
             $table->unsignedInteger('starts_at_line_number');
             $table->unsignedSmallInteger('number_of_lines');
             $table->boolean('is_perfect');
+            $table->text('text');
             $table->timestamps();
 
             $table->unique(['release_id', 'zip_index', 'starts_at_line_number'], 'release-index-line');

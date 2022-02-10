@@ -19,7 +19,10 @@ class CascadingComment
         $this->lines_count = count($this->lines);
 
         // This is not actually a rule, just a sanity check.
-        throw_if($this->lines_count !== 3 && $this->lines_count !== 4, 'Invalid cascading comment length, expected 3 or 4 lines, actual: '.$this->lines_count);
+        throw_if(
+            $this->lines_count !== 3 && $this->lines_count !== 4,
+            sprintf("Invalid cascading comment length, expected 3 or 4 lines, actual: %s\n%s", $this->lines_count, $string)
+        );
 
         $this->is_perfect = $this->isPerfect();
     }

@@ -44,7 +44,7 @@ class ProcessReleaseJobTest extends TestCase
     }
 
     /** @test */
-    function it_can_process_a_real_release()
+    function it_can_process_a_real_skeleton_release()
     {
         $release = CreatesModels::release(
             base_path('tests/Fixtures/zips/laravel-8.6.10.zip')
@@ -52,10 +52,41 @@ class ProcessReleaseJobTest extends TestCase
 
         ProcessReleaseJob::dispatch($release);
 
-        $this->assertGreaterThan(90, $release->comments->count());
+        $this->assertSame(91, $release->comments->count());
+        $this->assertSame(86, $release->comments->where('is_perfect', true)->count());
+
+        $this->assertSame(1, $release->comments->where('type', CommentType::SLASH_COMMENT)->count());
+        $this->assertSame(0, $release->comments->where('type', CommentType::LUA_COMMENT)->count());
+        $this->assertSame(2, $release->comments->where('type', CommentType::MULTILINE_COMMENT)->count());
+        $this->assertSame(88, $release->comments->where('type', CommentType::PIPE_COMMENT)->count());
 
         $this->assertSame(3, $release->comments->min('number_of_lines'));
         $this->assertSame(4, $release->comments->max('number_of_lines'));
-        $this->assertTrue($release->comments->where('is_perfect', false)->isNotEmpty());
+
+        // This file contains commented javascript that kind of looks like a cascading comment.
+        $this->assertCount(2, $bootstrapComments = $release->comments->where('file_path', 'resources/js/bootstrap.js'));
+        $this->assertSame(3, $bootstrapComments->first()->starts_at_line_number);
+        $this->assertSame(13, $bootstrapComments->last()->starts_at_line_number);
+    }
+
+    /** @test */
+    function it_can_process_a_real_framework_release()
+    {
+        $release = CreatesModels::release(
+            base_path('tests/Fixtures/zips/laravel-framework-5.2.41.zip')
+        );
+
+        ProcessReleaseJob::dispatch($release);
+
+        $this->assertSame(522, $release->comments->count());
+        $this->assertSame(433, $release->comments->where('is_perfect', true)->count());
+
+        $this->assertSame(521, $release->comments->where('type', CommentType::SLASH_COMMENT)->count());
+        $this->assertSame(0, $release->comments->where('type', CommentType::LUA_COMMENT)->count());
+        $this->assertSame(0, $release->comments->where('type', CommentType::MULTILINE_COMMENT)->count());
+        $this->assertSame(1, $release->comments->where('type', CommentType::PIPE_COMMENT)->count());
+
+        $this->assertSame(3, $release->comments->min('number_of_lines'));
+        $this->assertSame(4, $release->comments->max('number_of_lines'));
     }
 }

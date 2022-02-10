@@ -2,8 +2,6 @@
 
 namespace App\Lcc\Enums;
 
-use RuntimeException;
-
 enum CommentType: int
 {
     case SLASH_COMMENT = 1;
@@ -14,13 +12,20 @@ enum CommentType: int
 
     case PIPE_COMMENT = 4;
 
-    public static function fromLine($line)
+    public static function fromLine($line): CommentType
     {
         return match (true) {
             str_starts_with($line, '// ') => CommentType::SLASH_COMMENT,
             str_starts_with($line, '* ') => CommentType::MULTILINE_COMMENT,
+            str_starts_with($line, '-- ') => CommentType::LUA_COMMENT,
             str_starts_with($line, '| ') => CommentType::PIPE_COMMENT,
-            default => throw new RuntimeException('Unknown comment prefix: '.$line),
         };
     }
+
+    public const COMMENT_PREFIXES = [
+        '// ', // SLASH_COMMENT
+        '* ', // MULTILINE_COMMENT
+        '-- ', // LUA_COMMENT
+        '| ', // PIPE_COMMENT
+    ];
 }

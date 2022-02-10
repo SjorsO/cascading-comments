@@ -8,31 +8,25 @@ use RuntimeException;
 
 class CascadingCommentCandidate
 {
-    public const COMMENT_PREFIXES = [
-        '// ',
-        '* ',
-        '| ',
-    ];
-
     public CommentType $type;
 
     public array $lines;
 
     public bool $isActuallyACascadingComment;
 
-    public function __construct($lines)
+    public function __construct($candidateLines, public int $startsAtLineNumber, private array $allLines)
     {
-        $this->type = CommentType::fromLine($lines[0]);
+        $this->type = CommentType::fromLine($candidateLines[0]);
 
         $this->lines = array_map(function ($line) {
-            foreach (static::COMMENT_PREFIXES as $prefix) {
+            foreach (CommentType::COMMENT_PREFIXES as $prefix) {
                 if (str_starts_with($line, $prefix)) {
                     return Str::after($line, $prefix);
                 }
             }
 
             throw new RuntimeException('Not all lines have a prefix');
-        }, $lines);
+        }, $candidateLines);
 
         $this->isActuallyACascadingComment = $this->isForReal();
     }
@@ -57,7 +51,36 @@ class CascadingCommentCandidate
             $lastLength = $length;
         }
 
+        // Method DocBlocks don't contain cascading comments.
+        if ($this->isDocBlock()) {
+            return false;
+        }
+
         return true;
+    }
+
+    private function isDocBlock()
+    {
+        $linesStartingWithAt = array_filter($this->lines, fn ($line) => str_starts_with($line, '@'));
+
+        // If every line of this comment starts with an "@", then this is a "@param" list inside a DocBlock.
+        if (count($linesStartingWithAt) === count($this->lines)) {
+            return true;
+        }
+
+        $index = $this->startsAtLineNumber + count($this->lines);
+
+        while (true) {
+            $line = trim($this->allLines[$index++] ?? '');
+
+            if (! str_starts_with($line, '*')) {
+                return false;
+            }
+
+            if (str_contains($line, '* @return')) {
+                return true;
+            }
+        }
     }
 
     public function toString()

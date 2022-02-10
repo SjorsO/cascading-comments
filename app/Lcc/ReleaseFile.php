@@ -2,6 +2,7 @@
 
 namespace App\Lcc;
 
+use App\Lcc\Enums\CommentType;
 use Illuminate\Support\Str;
 
 class ReleaseFile
@@ -11,45 +12,51 @@ class ReleaseFile
 
     public function __construct(public $filePath, public int $zipIndex, $contents)
     {
-        $lines = array_map(function ($line) {
+        $lines = explode("\n", $contents);
+
+        $candidateLines = array_map(function ($line) {
             $line = trim($line);
 
-            return Str::startsWith($line, CascadingCommentCandidate::COMMENT_PREFIXES) ? $line : null;
-        }, explode("\n", $contents));
+            return Str::startsWith($line, CommentType::COMMENT_PREFIXES) ? $line : null;
+        }, $lines);
 
-        $chunk = [];
+        $candidateCommentLines = [];
 
-        $chunkStartsAtLineNumber = null;
+        $candidateStartsAtLineNumber = null;
 
-        foreach ($lines as $lineNumber => $line) {
-            if (! $chunk && ! $line) {
+        foreach ($candidateLines as $lineNumber => $line) {
+            if (! $candidateCommentLines && ! $line) {
                 continue;
             }
 
-            if ($chunk && ! $line) {
-                $candidate = new CascadingCommentCandidate($chunk);
+            if ($candidateCommentLines && ! $line) {
+                $candidate = new CascadingCommentCandidate(
+                    $candidateCommentLines,
+                    $candidateStartsAtLineNumber,
+                    $lines,
+                );
 
                 if ($candidate->isActuallyACascadingComment) {
                     $this->comments[] = new CascadingComment(
                         $candidate->toString(),
                         $candidate->type,
-                        $chunkStartsAtLineNumber
+                        $candidate->startsAtLineNumber,
                     );
                 }
 
-                $chunk = [];
+                $candidateCommentLines = [];
 
-                $chunkStartsAtLineNumber = null;
+                $candidateStartsAtLineNumber = null;
 
                 continue;
             }
 
             if ($line) {
-                if ($chunkStartsAtLineNumber === null) {
-                    $chunkStartsAtLineNumber = $lineNumber;
+                if ($candidateStartsAtLineNumber === null) {
+                    $candidateStartsAtLineNumber = $lineNumber;
                 }
 
-                $chunk[] = $line;
+                $candidateCommentLines[] = $line;
             }
         }
     }

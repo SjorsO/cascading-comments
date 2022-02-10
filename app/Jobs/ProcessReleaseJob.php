@@ -30,6 +30,7 @@ class ProcessReleaseJob extends BaseJob implements ShouldBeUnique
                     'number_of_lines' => $comment->lines_count,
                     'zip_index' => $file->zipIndex,
                     'is_perfect' => $comment->is_perfect,
+                    'text' => $comment->toString(),
                 ];
             }
         }
