@@ -81,4 +81,4 @@ scp -P "$ssh_port" "artifacts.tar.gz" "$ssh_user@$ssh_host:$remote_artifacts_pat
 
 echo "Running the deployment script on the remote server."
 
-ssh "$ssh_user@$ssh_host" -p "$ssh_port" "cat \"$base_directory/deployment/deploy.sh\" | bash -seo pipefail -- \"$remote_artifacts_path\" \"$base_directory\""
+ssh "$ssh_user@$ssh_host" -p "$ssh_port" "cat \"/home/sjorso/www/cascading-comments/deployment/deploy.sh\" | bash -seo pipefail -- \"$remote_artifacts_path\" \"$base_directory\""
