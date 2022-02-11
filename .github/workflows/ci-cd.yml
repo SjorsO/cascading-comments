@@ -65,7 +65,7 @@ jobs:
 
       - name: Deploy
         env:
-          base_directory: "~/cascading-comments"
+          base_directory: "~/www/cascading-comments"
           ssh_user: "sjorso"
           ssh_host: "188.166.21.28"
           ssh_port: 22
