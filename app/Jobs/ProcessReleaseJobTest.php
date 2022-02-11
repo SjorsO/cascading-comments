@@ -89,4 +89,25 @@ class ProcessReleaseJobTest extends TestCase
         $this->assertSame(3, $release->comments->min('number_of_lines'));
         $this->assertSame(4, $release->comments->max('number_of_lines'));
     }
+
+    /** @test */
+    function it_can_process_a_another_real_framework_release()
+    {
+        $release = CreatesModels::release(
+            base_path('tests/Fixtures/zips/laravel-framework-9.0.2.zip')
+        );
+
+        ProcessReleaseJob::dispatch($release);
+
+        $this->assertSame(579, $release->comments->count());
+        $this->assertSame(509, $release->comments->where('is_perfect', true)->count());
+
+        $this->assertSame(577, $release->comments->where('type', CommentType::SLASH_COMMENT)->count());
+        $this->assertSame(1, $release->comments->where('type', CommentType::LUA_COMMENT)->count());
+        $this->assertSame(0, $release->comments->where('type', CommentType::MULTILINE_COMMENT)->count());
+        $this->assertSame(1, $release->comments->where('type', CommentType::PIPE_COMMENT)->count());
+
+        $this->assertSame(3, $release->comments->min('number_of_lines'));
+        $this->assertSame(4, $release->comments->max('number_of_lines'));
+    }
 }
