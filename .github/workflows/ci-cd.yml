@@ -1,0 +1,74 @@
+name: CI/CD
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: "ubuntu-20.04"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.1"
+          coverage: none
+
+      - name: Use Composer dependencies cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/composer
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Use npm dependencies cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-npm-
+
+      - name: Install dependencies
+        run: |
+          composer install --no-interaction --no-progress --optimize-autoloader --no-dev
+          npm ci
+          npm run production
+
+      - name: Compress deployment artifacts
+        run: |
+          tar --create --gzip \
+            --exclude="bootstrap/cache/*" \
+            --exclude="node_modules" \
+            --exclude="public/storage" \
+            --exclude="storage" \
+            --exclude="tests" \
+            --file ~/artifacts.tar.gz * .github/deployment
+
+      - name: Upload deployment artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: deployment-artifacts
+          path: ~/artifacts.tar.gz
+          retention-days: 1
+
+  deploy-master:
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: "ubuntu-20.04"
+    steps:
+      - name: Download deployment artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: deployment-artifacts
+
+      - name: Deploy
+        env:
+          base_directory: "~/cascading-comments"
+          ssh_user: "sjorso"
+          ssh_host: "188.166.21.28"
+          ssh_port: 22
+          private_ssh_key: "${{ secrets.SSH_KEY }}"
+          ssh_known_hosts: "${{ secrets.SSH_KNOWN_HOSTS }}"
+        run: tar -xf artifacts.tar.gz .github/deployment/prepare.sh -O | bash -se -- "$base_directory" "$ssh_user" "$ssh_host" "$ssh_port" "$private_ssh_key" "$ssh_known_hosts"
