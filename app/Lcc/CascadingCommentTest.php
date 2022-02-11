@@ -13,9 +13,9 @@ class CascadingCommentTest extends TestCase
      */
     function it_recognizes_a_perfect_comment($string)
     {
-        $cascadingComment = new CascadingComment($string, CommentType::SLASH_COMMENT, 0);
+        $cascadingComment = new CascadingComment($string, CommentType::SLASH_COMMENT, 0, '/some/file');
 
-        $this->assertTrue($cascadingComment->is_perfect);
+        $this->assertTrue($cascadingComment->isPerfect);
     }
 
     /**
@@ -24,9 +24,9 @@ class CascadingCommentTest extends TestCase
      */
     function it_recognizes_an_imperfect_comment($string)
     {
-        $cascadingComment = new CascadingComment($string, CommentType::LUA_COMMENT, 0);
+        $cascadingComment = new CascadingComment($string, CommentType::LUA_COMMENT, 0, '/some/file');
 
-        $this->assertFalse($cascadingComment->is_perfect);
+        $this->assertFalse($cascadingComment->isPerfect);
     }
 
     public function providesPerfectComments()

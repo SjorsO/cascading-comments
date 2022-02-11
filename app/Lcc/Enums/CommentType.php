@@ -12,20 +12,24 @@ enum CommentType: int
 
     case PIPE_COMMENT = 4;
 
-    public static function fromLine($line): CommentType
+    public static function fromLine($line)
     {
-        return match (true) {
+        $type = match (true) {
             str_starts_with($line, '// ') => CommentType::SLASH_COMMENT,
             str_starts_with($line, '* ') => CommentType::MULTILINE_COMMENT,
             str_starts_with($line, '-- ') => CommentType::LUA_COMMENT,
             str_starts_with($line, '| ') => CommentType::PIPE_COMMENT,
         };
+
+        return [
+            $type, CommentType::COMMENT_PREFIXES[$type->value]
+        ];
     }
 
     public const COMMENT_PREFIXES = [
-        '// ', // SLASH_COMMENT
-        '* ', // MULTILINE_COMMENT
-        '-- ', // LUA_COMMENT
-        '| ', // PIPE_COMMENT
+        1 => '// ', // SLASH_COMMENT
+        2 => '* ', // MULTILINE_COMMENT
+        3 => '-- ', // LUA_COMMENT
+        4 => '| ', // PIPE_COMMENT
     ];
 }

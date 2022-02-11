@@ -22,9 +22,9 @@ class ReleaseFileTest extends TestCase
 
         $comment = $comments[0];
 
-        $this->assertTrue($comment->is_perfect);
+        $this->assertTrue($comment->isPerfect);
         $this->assertSame(CommentType::SLASH_COMMENT, $comment->type);
-        $this->assertSame(3, $comment->lines_count);
+        $this->assertSame(3, $comment->numberOfLines);
         $this->assertSame(13, $comment->startsAtLineNumber);
 
         $this->assertSame(<<<COMMENT
@@ -92,9 +92,9 @@ class ReleaseFileTest extends TestCase
 
         $comment = $frameworkFile->comments[0];
 
-        $this->assertTrue($comment->is_perfect);
+        $this->assertTrue($comment->isPerfect);
         $this->assertSame(CommentType::LUA_COMMENT, $comment->type);
-        $this->assertSame(3, $comment->lines_count);
+        $this->assertSame(3, $comment->numberOfLines);
         $this->assertSame(110, $comment->startsAtLineNumber);
 
         $this->assertSame(<<<COMMENT

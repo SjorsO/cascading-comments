@@ -27,9 +27,9 @@ class ProcessReleaseJob extends BaseJob implements ShouldBeUnique
                     'file_path' => $file->filePath,
                     'type' => $comment->type,
                     'starts_at_line_number' => $comment->startsAtLineNumber,
-                    'number_of_lines' => $comment->lines_count,
+                    'number_of_lines' => $comment->numberOfLines,
                     'zip_index' => $file->zipIndex,
-                    'is_perfect' => $comment->is_perfect,
+                    'is_perfect' => $comment->isPerfect,
                     'text' => $comment->toString(),
                 ];
             }

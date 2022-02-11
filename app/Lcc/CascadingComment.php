@@ -3,28 +3,35 @@
 namespace App\Lcc;
 
 use App\Lcc\Enums\CommentType;
+use LogicException;
 
 class CascadingComment
 {
-    public bool $is_perfect;
+    public bool $isPerfect;
 
     public array $lines;
 
-    public int $lines_count;
+    public int $numberOfLines;
 
-    public function __construct($string, public CommentType $type, public int $startsAtLineNumber)
+    public function __construct($lines, public CommentType $type, public int $startsAtLineNumber, public $filePath)
     {
-        $this->lines = explode("\n", $string);
+        $this->lines = is_array($lines) ? $lines : explode("\n", $lines);
 
-        $this->lines_count = count($this->lines);
+        $this->numberOfLines = count($this->lines);
 
         // This is not actually a rule, just a sanity check.
-        throw_if(
-            $this->lines_count !== 3 && $this->lines_count !== 4,
-            sprintf("Invalid cascading comment length, expected 3 or 4 lines, actual: %s\n%s", $this->lines_count, $string)
-        );
+        if ($this->numberOfLines !== 3 && $this->numberOfLines !== 4) {
+            throw new LogicException(
+                sprintf(
+                    "Invalid cascading comment length, expected 3 or 4 lines, actual: %s\n\nFile: %s\n\n%s",
+                    $this->numberOfLines,
+                    $this->filePath,
+                    implode("\n", $this->lines)
+                )
+            );
+        }
 
-        $this->is_perfect = $this->isPerfect();
+        $this->isPerfect = $this->isPerfect();
     }
 
     private function isPerfect()

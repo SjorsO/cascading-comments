@@ -24,23 +24,56 @@ class ReleaseFile
                     : [0 => $group++];
             })
             ->forget(0)
-            ->map->mapWithKeys(fn ($group) => $group) // Flatten but keep the array keys
-            ->map(function (Collection $candidateLines) use ($allLines) {
-                return new CascadingCommentCandidate(
-                    $candidateLines->values()->toArray(),
-                    $candidateLines->keys()->first(),
-                    $allLines,
-                );
+            ->map->mapWithKeys(fn (array $group) => $group) // Flatten but keep the array keys
+            ->mapWithKeys(fn (Collection $group) => [$group->keys()->first() => $group->values()])
+            ->filter(function (Collection $candidateLines, $startsAtLineNumber) use ($allLines) {
+                return $this->isCascadingComment($candidateLines, $startsAtLineNumber, $allLines);
             })
-            ->filter(fn (CascadingCommentCandidate $candidate) => $candidate->isActuallyACascadingComment)
-            ->map(function (CascadingCommentCandidate $candidate) {
+            ->map(function (Collection $candidateLines, $startsAtLineNumber) use ($filePath) {
+                [$type, $prefix] = CommentType::fromLine($candidateLines[0]);
+
                 return new CascadingComment(
-                    $candidate->toString(),
-                    $candidate->type,
-                    $candidate->startsAtLineNumber,
+                    $candidateLines->map(fn ($line) => Str::after($line, $prefix))->toArray(),
+                    $type,
+                    $startsAtLineNumber,
+                    $filePath,
                 );
             })
             ->values()
             ->toArray();
+    }
+
+    private function isCascadingComment(Collection $candidateLines, int $startsAtLineNumber, array $allLines): bool
+    {
+        if ($candidateLines->count() < 3) {
+            return false;
+        }
+
+        $lineLengthsAreWayOff = $candidateLines
+            ->map(fn ($line) => mb_strlen($line))
+            ->sliding()
+            ->mapSpread(fn ($previousLineLength, $nextLineLength) => abs($nextLineLength - $previousLineLength))
+            ->contains(fn ($lengthDiff) => $lengthDiff > 8);
+
+        if ($lineLengthsAreWayOff) {
+            return false;
+        }
+
+        // Check if our candidate is a "@param" list inside a DocBlock.
+        if ($candidateLines->every(fn ($line) => str_starts_with($line, '* @'))) {
+            return false;
+        }
+
+        $isSomewhereInDocBlock = collect($allLines)
+            ->skip($candidateLines->count() + $startsAtLineNumber)
+            ->map(fn ($line) => ltrim($line))
+            ->takeWhile(fn ($line) => str_starts_with($line, '*'))
+            ->contains(fn ($line) => str_starts_with($line, '* @return'));
+
+        if ($isSomewhereInDocBlock) {
+            return false;
+        }
+
+        return true;
     }
 }
