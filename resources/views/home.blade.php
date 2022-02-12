@@ -1,4 +1,4 @@
-<x-layout.template.base title="Laravel Cascading Comments">
+<x-layout.template.base title="Cascading Comments">
 
     Hallo!
 

@@ -1,5 +1,5 @@
 {
-    "name": "sjorso/laravel-cascading-comments",
+    "name": "sjorso/cascading-comments",
     "type": "project",
     "description": "An index of Laravel's cascading comments.",
     "license": "MIT",
