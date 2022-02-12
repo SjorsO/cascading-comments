@@ -20,10 +20,10 @@ class CascadingComment
         $this->numberOfLines = count($this->lines);
 
         // This is not actually a rule, just a sanity check.
-        if ($this->numberOfLines < 2 || $this->numberOfLines > 5) {
+        if ($this->numberOfLines < 2 || $this->numberOfLines > 8) {
             throw new LogicException(
                 sprintf(
-                    "Invalid cascading comment length, expected between 2 and 5 lines, actual: %s\n\nFile: %s\n\n%s",
+                    "Invalid cascading comment length, expected between 2 and 8 lines, actual: %s\n\nFile: %s\n\n%s",
                     $this->numberOfLines,
                     $this->filePath,
                     implode("\n", $this->lines)

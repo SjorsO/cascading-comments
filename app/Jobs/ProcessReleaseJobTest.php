@@ -131,4 +131,19 @@ class ProcessReleaseJobTest extends TestCase
         $this->assertSame(3, $release->comments->min('number_of_lines'));
         $this->assertSame(4, $release->comments->max('number_of_lines'));
     }
+
+    /** @test */
+    function it_can_process_yet_another_real_framework_release()
+    {
+        $release = CreatesModels::release(
+            base_path('tests/Fixtures/zips/laravel-laravel-v5.0.0.zip')
+        );
+
+        ProcessReleaseJob::dispatch($release);
+
+        // This file has a long normal comment that kind of looks cascading.
+        $this->assertCount(0, $release->comments->where('file_path', 'resources/assets/less/bootstrap/button-groups.less'));
+
+        $this->assertSame(82, $release->comments->count());
+    }
 }

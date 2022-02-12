@@ -45,7 +45,7 @@ class ReleaseFile
 
     private function isCascadingComment(Collection $candidateLines, int $startsAtLineNumber, array $allLines): bool
     {
-        if ($candidateLines->count() < 3) {
+        if ($candidateLines->count() < 3 || $candidateLines->count() > 5) {
             return false;
         }
 
