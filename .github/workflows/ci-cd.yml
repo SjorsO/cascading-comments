@@ -6,6 +6,15 @@ on:
 jobs:
   build:
     runs-on: "ubuntu-20.04"
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: cascading_comments_test
+        ports:
+          - 3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -32,9 +41,18 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer install --no-interaction --no-progress --optimize-autoloader --no-dev
+          composer install --no-interaction --no-progress --optimize-autoloader
           npm ci
           npm run production
+
+      - name: Execute tests
+        run: vendor/bin/phpunit
+        env:
+          DB_USERNAME: root
+          DB_PORT: ${{ job.services.mysql.ports[3306] }}
+
+      - name: Install production dependencies
+        run: composer install --no-interaction --no-progress --optimize-autoloader --no-dev
 
       - name: Compress deployment artifacts
         run: |
