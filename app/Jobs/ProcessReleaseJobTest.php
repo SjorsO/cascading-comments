@@ -70,6 +70,27 @@ class ProcessReleaseJobTest extends TestCase
     }
 
     /** @test */
+    function it_can_process_a_real_old_skeleton_release()
+    {
+        $release = CreatesModels::release(
+            base_path('tests/Fixtures/zips/laravel-laravel-v3.2.0.zip')
+        );
+
+        ProcessReleaseJob::dispatch($release);
+
+        $this->assertSame(149, $release->comments->count());
+        $this->assertSame(4, $release->comments->where('is_perfect', true)->count());
+
+        $this->assertSame(115, $release->comments->where('type', CommentType::SLASH_COMMENT)->count());
+        $this->assertSame(0, $release->comments->where('type', CommentType::LUA_COMMENT)->count());
+        $this->assertSame(5, $release->comments->where('type', CommentType::MULTILINE_COMMENT)->count());
+        $this->assertSame(29, $release->comments->where('type', CommentType::PIPE_COMMENT)->count());
+
+        $this->assertSame(3, $release->comments->min('number_of_lines'));
+        $this->assertSame(5, $release->comments->max('number_of_lines'));
+    }
+
+    /** @test */
     function it_can_process_a_real_framework_release()
     {
         $release = CreatesModels::release(
