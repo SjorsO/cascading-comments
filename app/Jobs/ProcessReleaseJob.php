@@ -31,6 +31,8 @@ class ProcessReleaseJob extends BaseJob implements ShouldBeUnique
                     'zip_index' => $file->zipIndex,
                     'is_perfect' => $comment->isPerfect,
                     'text' => $comment->toString(),
+                    'updated_at' => now(),
+                    'created_at' => now(),
                 ];
             }
         }

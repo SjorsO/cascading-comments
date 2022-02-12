@@ -29,6 +29,8 @@ class PollReleasesJob extends BaseJob
                 'commit_hash' => $record->commitHash,
                 'download_url' => $record->downloadUrl,
                 'published_at' => $record->publishedAt,
+                'updated_at' => now(),
+                'created_at' => now(),
             ];
         }, $releases);
 
