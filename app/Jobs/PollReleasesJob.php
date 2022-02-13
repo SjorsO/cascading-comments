@@ -4,7 +4,9 @@ namespace App\Jobs;
 
 use App\Lcc\Github\GithubApi;
 use App\Lcc\Github\Records\TagRecord;
+use App\Models\Release;
 use App\Models\Repository;
+use Illuminate\Support\Facades\Storage;
 
 class PollReleasesJob extends BaseJob
 {
@@ -22,6 +24,10 @@ class PollReleasesJob extends BaseJob
         }
 
         $records = array_map(function (TagRecord $record) {
+            $hasDownloadedRelease = Storage::exists(
+                Release::make(['commit_hash' => $record->commitHash])->zip_storage_path
+            );
+
             return [
                 'repository_id' => $this->repository->id,
                 'name' => $record->name,
@@ -29,6 +35,7 @@ class PollReleasesJob extends BaseJob
                 'commit_hash' => $record->commitHash,
                 'download_url' => $record->downloadUrl,
                 'published_at' => $record->publishedAt,
+                'has_downloaded_release' => $hasDownloadedRelease,
                 'updated_at' => now(),
                 'created_at' => now(),
             ];

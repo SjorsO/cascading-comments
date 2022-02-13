@@ -32,7 +32,7 @@ class Release extends Model
 
     public function getZipStoragePathAttribute()
     {
-        return sprintf('releases/%s/%s/%s.zip', $this->commit_hash[0], $this->commit_hash[1], $this->id);
+        return sprintf('releases/%s/%s/%s.zip', $this->commit_hash[0], $this->commit_hash[1], $this->commit_hash);
     }
 
     /** @return ReleaseFile[] */
