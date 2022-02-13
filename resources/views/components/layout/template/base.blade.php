@@ -9,6 +9,10 @@
 
     <title>{{ $title }}</title>
 
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+
     @stack('head')
 
     <link rel="stylesheet" type="text/css" href="{{ mix('css/app.css') }}"/>
@@ -17,6 +21,15 @@
     @livewireStyles
 </head>
 
-{{ $slot }}
+<body>
+
+    <div class="container mx-auto px-2">
+        {{ $slot }}
+    </div>
+
+    @livewireScripts
+
+</body>
+
 
 </html>

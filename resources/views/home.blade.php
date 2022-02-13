@@ -1,5 +1,5 @@
 <x-layout.template.base title="Cascading Comments">
 
-    Hallo!
+    <livewire:repository-release-selection/>
 
 </x-layout.template.base>

@@ -18,4 +18,9 @@ class Repository extends Model
     {
         return $this->hasMany(Release::class);
     }
+
+    public function getDisplayNameAttribute()
+    {
+        return $this->owner.'/'.$this->name;
+    }
 }
