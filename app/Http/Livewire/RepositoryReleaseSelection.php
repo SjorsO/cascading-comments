@@ -40,7 +40,7 @@ class RepositoryReleaseSelection extends Component
     {
         return view('livewire.repository-release-selection', [
             'repositoryOptions' => Repository::get()->pluck('display_name', 'id'),
-            'releaseOptions' => $this->repository->releases()->latest('published_at')->pluck('name', 'id'),
+            'releaseOptions' => $this->repository->releases()->where('is_processed', true)->latest('published_at')->pluck('name', 'id'),
         ]);
     }
 }
