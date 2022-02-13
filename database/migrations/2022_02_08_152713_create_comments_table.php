@@ -11,15 +11,17 @@ class CreateCommentsTable extends Migration
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('release_id')->constrained()->cascadeOnDelete();
-            $table->unsignedInteger('zip_index');
+            $table->unsignedSmallInteger('index');
+            $table->unsignedSmallInteger('zip_index');
             $table->string('file_path');
-            $table->unsignedSmallInteger('type');
-            $table->unsignedInteger('starts_at_line_number');
-            $table->unsignedSmallInteger('number_of_lines');
+            $table->tinyInteger('type');
+            $table->unsignedSmallInteger('starts_at_line_number');
+            $table->tinyInteger('number_of_lines');
             $table->boolean('is_perfect');
-            $table->text('text');
+            $table->string('text', 2000);
             $table->timestamps();
 
+            $table->unique(['release_id', 'index']);
             $table->unique(['release_id', 'zip_index', 'starts_at_line_number'], 'release-index-line');
         });
     }

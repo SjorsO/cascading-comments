@@ -20,10 +20,13 @@ class ProcessReleaseJob extends BaseJob implements ShouldBeUnique
 
         $records = [];
 
+        $index = 1;
+
         foreach ($this->release->files() as $file) {
             foreach ($file->comments as $comment) {
                 $records[] = [
                     'release_id' => $this->release->id,
+                    'index' => $index++,
                     'file_path' => $file->filePath,
                     'type' => $comment->type,
                     'starts_at_line_number' => $comment->startsAtLineNumber,

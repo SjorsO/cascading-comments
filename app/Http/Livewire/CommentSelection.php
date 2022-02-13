@@ -41,7 +41,7 @@ class CommentSelection extends Component
     public function render()
     {
         return view('livewire.comment-selection', [
-            'commentOptions' => $this->release->comments()->pluck('id', 'id'),
+            'commentOptions' => $this->release->comments()->pluck('index', 'id'),
         ]);
     }
 }

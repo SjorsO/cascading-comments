@@ -12,6 +12,7 @@ class Comment extends Model
 
     protected $casts = [
         'release_id' => 'int',
+        'index' => 'int',
         'zip_index' => 'int',
         'type' => CommentType::class,
         'starts_at_line_number' => 'int',

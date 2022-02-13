@@ -13,7 +13,7 @@ class CreateReleasesTable extends Migration
             $table->foreignId('repository_id')->constrained()->cascadeOnDelete();
             $table->string('name')->unique();
             $table->string('formatted_name');
-            $table->string('commit_hash')->unique();
+            $table->char('commit_hash', 40)->unique();
             $table->string('download_url');
             $table->dateTime('published_at');
             $table->boolean('has_downloaded_release')->default(false);
