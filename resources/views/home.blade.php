@@ -2,12 +2,12 @@
 
 <x-layout.template.base title="Cascading Comments">
 
-    <h1 class="text-xl mb-4">An index of Laravel's cascading comments</h1>
+    <x-h1 class="mb-4">An index of Laravel's cascading comments</x-h1>
 
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
         @foreach($repositories as $repository)
-            <div class="border rounded px-2 py-3 text-center hover:ring">
+            <a class="border rounded px-2 py-3 text-center hover:ring" href="{{ route('repositories.show', [$repository->owner, $repository->name]) }}">
 
                 <img src="{{ $repository->logo_url }}" alt="Logo for the {{ $repository->display_name }} repository" class="mx-auto h-12 mb-2" height="48">
 
@@ -25,7 +25,7 @@
                         This release has no cascading comments.
                     @endif
                 </p>
-            </div>
+            </a>
         @endforeach
 
     </div>

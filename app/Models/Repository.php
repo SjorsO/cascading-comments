@@ -50,4 +50,12 @@ class Repository extends Model
             get: fn () => $this->owner.'/'.$this->name,
         );
     }
+
+    public static function findByOwnerAndName($owner, $name): Repository
+    {
+        return Repository::query()
+            ->where('owner', $owner)
+            ->where('name', $name)
+            ->firstOr(fn () => abort(to_route('home')));
+    }
 }
