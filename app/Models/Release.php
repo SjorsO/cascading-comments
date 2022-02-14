@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Lcc\ReleaseFile;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -33,18 +34,24 @@ class Release extends Model
         return $this->hasMany(Comment::class);
     }
 
-    public function getZipStoragePathAttribute()
+    public function zipStoragePath(): Attribute
     {
-        return sprintf('releases/%s/%s/%s.zip', $this->commit_hash[0], $this->commit_hash[1], $this->commit_hash);
+        return new Attribute(
+            get: fn () => sprintf('releases/%s/%s/%s.zip', $this->commit_hash[0], $this->commit_hash[1], $this->commit_hash),
+        );
     }
 
-    public function getPerfectCommentPercentageAttribute()
+    public function perfectCommentPercentage(): Attribute
     {
-        if ($this->comments_count === 0) {
-            return 0;
-        }
+        return new Attribute(
+            get: function () {
+                if ($this->comments_count === 0) {
+                    return 0;
+                }
 
-        return (int) round($this->perfect_comments_count / $this->comments_count * 100);
+                return (int) round($this->perfect_comments_count / $this->comments_count * 100);
+            },
+        );
     }
 
     /** @return ReleaseFile[] */

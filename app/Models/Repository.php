@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -27,22 +28,26 @@ class Repository extends Model
         );
     }
 
-    public function getLogoUrlAttribute()
+    public function logoUrl(): Attribute
     {
-        return match ($this->display_name) {
-            'laravel/laravel', 'laravel/framework' => asset('images/repository-logos/laravel.svg'),
-            'laravel/dusk' => asset('images/repository-logos/dusk.png'),
-            'laravel/horizon' => asset('images/repository-logos/horizon.png'),
-            'laravel/sanctum' => asset('images/repository-logos/sanctum.png'),
-            'laravel/sail' => asset('images/repository-logos/sail.png'),
-            'laravel/breeze' => asset('images/repository-logos/breeze.png'),
-            'laravel/envoy' => asset('images/repository-logos/envoyer.svg'),
-            default => asset('favicon.png'),
-        };
+        return new Attribute(
+            get: fn () => match ($this->display_name) {
+                'laravel/laravel', 'laravel/framework' => asset('images/repository-logos/laravel.svg'),
+                'laravel/dusk' => asset('images/repository-logos/dusk.png'),
+                'laravel/horizon' => asset('images/repository-logos/horizon.png'),
+                'laravel/sanctum' => asset('images/repository-logos/sanctum.png'),
+                'laravel/sail' => asset('images/repository-logos/sail.png'),
+                'laravel/breeze' => asset('images/repository-logos/breeze.png'),
+                'laravel/envoy' => asset('images/repository-logos/envoyer.svg'),
+                default => asset('favicon.png'),
+            },
+        );
     }
 
-    public function getDisplayNameAttribute()
+    public function displayName(): Attribute
     {
-        return $this->owner.'/'.$this->name;
+        return new Attribute(
+            get: fn () => $this->owner.'/'.$this->name,
+        );
     }
 }
