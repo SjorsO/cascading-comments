@@ -13,19 +13,22 @@ class DatabaseSeeder extends Seeder
 {
     public function run()
     {
-        Repository::create([
-            'owner' => 'laravel',
-            'name' => 'laravel',
-            'next_poll_at' => now()->startOfDay(),
-            'last_polled_at' => now()->subYear()->startOfYear(),
-        ]);
-
-        Repository::create([
-            'owner' => 'laravel',
-            'name' => 'framework',
-            'next_poll_at' => now()->startOfDay(),
-            'last_polled_at' => now()->subYear()->startOfYear(),
-        ]);
+        foreach ([
+            ['laravel', 'laravel'],
+            ['laravel', 'framework'],
+            // ['laravel', 'dusk'],
+            ['laravel', 'horizon'],
+            ['laravel', 'sanctum'],
+            ['laravel', 'sail'],
+            ['laravel', 'breeze'],
+        ] as [$owner, $name]) {
+            Repository::create([
+                'owner' => $owner,
+                'name' => $name,
+                'next_poll_at' => now()->startOfDay(),
+                'last_polled_at' => now()->subYear()->startOfYear(),
+            ]);
+        }
 
         $this->command->info('Getting release from the GitHub api...');
 

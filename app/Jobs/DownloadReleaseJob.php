@@ -6,6 +6,7 @@ use App\Models\Release;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class DownloadReleaseJob extends BaseJob implements ShouldBeUnique
 {
@@ -26,14 +27,15 @@ class DownloadReleaseJob extends BaseJob implements ShouldBeUnique
             dirname($this->release->zip_storage_path)
         );
 
-        Http::timeout(5)->sink($filePath)->get($this->release->download_url);
+        Http::timeout(10)->sink($filePath)->get($this->release->download_url);
 
         $this->release->update(['has_downloaded_release' => true]);
     }
 
     public function uniqueId()
     {
-        return $this->release->id;
+        // The "ShouldBeUnique" interface can cause the seeder to get stuck.
+        return is_production() ? $this->release->id : Str::random();
     }
 
     public static function run()

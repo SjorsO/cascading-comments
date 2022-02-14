@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Release;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Support\Str;
 
 class ProcessReleaseJob extends BaseJob implements ShouldBeUnique
 {
@@ -49,7 +50,8 @@ class ProcessReleaseJob extends BaseJob implements ShouldBeUnique
 
     public function uniqueId()
     {
-        return $this->release->id;
+        // The "ShouldBeUnique" interface can cause the seeder to get stuck.
+        return is_production() ? $this->release->id : Str::random();
     }
 
     public static function run()

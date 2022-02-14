@@ -23,7 +23,7 @@
 
 <body>
 
-    <div class="container mx-auto px-2">
+    <div class="max-w-4xl w-full mx-auto px-4 py-4">
         {{ $slot }}
     </div>
 
