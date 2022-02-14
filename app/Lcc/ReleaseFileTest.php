@@ -11,7 +11,7 @@ class ReleaseFileTest extends TestCase
     function it_can_detect_a_comment_in_a_file()
     {
         $content = file_get_contents(
-            base_path('server.php')
+            base_path('tests/Fixtures/files/server.php')
         );
 
         $frameworkFile = new ReleaseFile('server.php', 0, $content);

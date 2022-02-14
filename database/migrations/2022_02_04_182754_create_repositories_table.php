@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRepositoriesTable extends Migration
-{
+return new class extends Migration {
     public function up()
     {
         Schema::create('repositories', function (Blueprint $table) {
@@ -19,4 +18,4 @@ class CreateRepositoriesTable extends Migration
             $table->unique(['owner', 'name']);
         });
     }
-}
+};
