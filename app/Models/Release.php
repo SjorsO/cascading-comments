@@ -18,6 +18,9 @@ class Release extends Model
         'published_at' => 'datetime',
         'has_downloaded_release' => 'bool',
         'is_processed' => 'bool',
+        'comments_count' => 'int',
+        'perfect_comments_count' => 'int',
+        'imperfect_comments_count' => 'int',
     ];
 
     public function repository()
@@ -33,6 +36,15 @@ class Release extends Model
     public function getZipStoragePathAttribute()
     {
         return sprintf('releases/%s/%s/%s.zip', $this->commit_hash[0], $this->commit_hash[1], $this->commit_hash);
+    }
+
+    public function getPerfectCommentPercentageAttribute()
+    {
+        if ($this->comments_count === 0) {
+            return 0;
+        }
+
+        return (int) round($this->perfect_comments_count / $this->comments_count * 100);
     }
 
     /** @return ReleaseFile[] */

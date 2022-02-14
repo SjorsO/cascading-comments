@@ -20,7 +20,7 @@ class GithubApiTest extends TestCase
         $this->assertCount(6, $releases);
 
         $this->assertSame('5.0.30', $releases[0]->name);
-        $this->assertSame('v5.0.30', $releases[0]->formattedName);
+        $this->assertSame('005000030', $releases[0]->nameForOrdering);
         $this->assertSame('c7ffbf1fd4895ac4cdac551265d635d995346d97', $releases[0]->commitHash);
         $this->assertSame('https://codeload.github.com/laravel/framework/legacy.zip/c7ffbf1fd4895ac4cdac551265d635d995346d97', $releases[0]->downloadUrl);
         $this->assertSame('2015-05-08 19:11:13', $releases[0]->publishedAt->toDateTimeString());

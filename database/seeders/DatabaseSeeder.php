@@ -16,11 +16,12 @@ class DatabaseSeeder extends Seeder
         foreach ([
             ['laravel', 'laravel'],
             ['laravel', 'framework'],
-            // ['laravel', 'dusk'],
+            ['laravel', 'dusk'],
             ['laravel', 'horizon'],
             ['laravel', 'sanctum'],
             ['laravel', 'sail'],
             ['laravel', 'breeze'],
+            ['laravel', 'envoy'],
         ] as [$owner, $name]) {
             Repository::create([
                 'owner' => $owner,

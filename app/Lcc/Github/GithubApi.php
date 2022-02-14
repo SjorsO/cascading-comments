@@ -17,6 +17,7 @@ class GithubApi
         $this->token = config('lcc.github_personal_access_token');
     }
 
+    /** @return TagRecord[] */
     public function getReleases($owner, $name)
     {
         $releases = [];

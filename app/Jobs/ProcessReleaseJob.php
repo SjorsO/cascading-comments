@@ -45,7 +45,12 @@ class ProcessReleaseJob extends BaseJob implements ShouldBeUnique
             $this->release->comments()->insert($chunk);
         }
 
-        $this->release->update(['is_processed' => true]);
+        $this->release->update([
+            'is_processed' => true,
+            'comments_count' => $this->release->comments()->count(),
+            'perfect_comments_count' => $this->release->comments()->where('is_perfect', true)->count(),
+            'imperfect_comments_count' => $this->release->comments()->where('is_perfect', false)->count(),
+        ]);
     }
 
     public function uniqueId()

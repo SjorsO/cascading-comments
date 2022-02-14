@@ -31,7 +31,7 @@ class PollReleasesJobTest extends TestCase
         [$release] = $repository->releases;
 
         $this->assertSame('5.0.30', $release->name);
-        $this->assertSame('v5.0.30', $release->formatted_name);
+        $this->assertSame('005000030', $release->order);
         $this->assertSame('c7ffbf1fd4895ac4cdac551265d635d995346d97', $release->commit_hash);
         $this->assertSame('https://codeload.github.com/laravel/framework/legacy.zip/c7ffbf1fd4895ac4cdac551265d635d995346d97', $release->download_url);
         $this->assertSame('2015-05-08 19:11:13', $release->published_at->toDateTimeString());

@@ -9,7 +9,7 @@ class HomeController
     public function index()
     {
         return view('home', [
-            'repositories' => Repository::get(),
+            'repositories' => Repository::with('latestRelease')->get(),
         ]);
     }
 }

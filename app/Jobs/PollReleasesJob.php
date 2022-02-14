@@ -31,7 +31,7 @@ class PollReleasesJob extends BaseJob
             return [
                 'repository_id' => $this->repository->id,
                 'name' => $record->name,
-                'formatted_name' => $record->formattedName,
+                'order' => $record->nameForOrdering,
                 'commit_hash' => $record->commitHash,
                 'download_url' => $record->downloadUrl,
                 'published_at' => $record->publishedAt,
