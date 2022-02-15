@@ -28,7 +28,16 @@ class PollReleasesJobTest extends TestCase
 
         $this->assertCount(6, $repository->releases);
 
-        [$release] = $repository->releases;
+        $this->assertSame([
+            'v4.0.0-BETA2',
+            'v4.0.0-BETA3',
+            'v4.0.0-BETA4',
+            '5.0.30',
+            '5.2.41',
+            '5.3',
+        ], $repository->releases->pluck('name')->toArray());
+
+        [$release] = $repository->releases->where('name', '5.0.30')->values();
 
         $this->assertSame('5.0.30', $release->name);
         $this->assertSame('005000030', $release->order);
