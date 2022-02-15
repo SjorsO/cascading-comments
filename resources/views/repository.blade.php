@@ -78,6 +78,9 @@
                             type: 'linear',
                             display: true,
                             position: 'right',
+                            ticks: {
+                                callback: (tick) => tick.toString() + '%',
+                            },
                             grid: {
                                 drawOnChartArea: false,
                             },
