@@ -17,7 +17,7 @@ class Repository extends Model
 
     public function releases()
     {
-        return $this->hasMany(Release::class);
+        return $this->hasMany(Release::class)->orderBy('order');
     }
 
     public function latestRelease()
