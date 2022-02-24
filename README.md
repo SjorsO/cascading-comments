@@ -20,7 +20,7 @@ The cron runs three jobs:
 - [DownloadReleaseJob](https://github.com/SjorsO/cascading-comments/blob/master/app/Jobs/DownloadReleaseJob.php) - Downloads the zip of new releases
 - [ProcessReleaseJob](https://github.com/SjorsO/cascading-comments/blob/master/app/Jobs/ProcessReleaseJob.php) - Finds cascading comments in a release and stores them in the database
 
-These files do interesting work:
-- [GithubApi](https://github.com/SjorsO/cascading-comments/blob/master/app/Lcc/Github/GithubApi.php)  - Makes GraphQL calls to get all release of a repository
+These files are interesting:
+- [GithubApi](https://github.com/SjorsO/cascading-comments/blob/master/app/Lcc/Github/GithubApi.php)  - Makes GraphQL calls to get all releases of a repository
 - [ReleaseFile](https://github.com/SjorsO/cascading-comments/blob/master/app/Lcc/ReleaseFile.php) - Finds all cascading comments in a file
 - [CascadingComment](https://github.com/SjorsO/cascading-comments/blob/master/app/Lcc/CascadingComment.php) - Detects if a cascading comment is perfect
