@@ -10,9 +10,9 @@ return new class extends Migration {
         Schema::create('releases', function (Blueprint $table) {
             $table->id();
             $table->foreignId('repository_id')->constrained()->cascadeOnDelete();
-            $table->string('name')->unique();
+            $table->string('name');
             $table->string('order');
-            $table->char('commit_hash', 40)->unique();
+            $table->char('commit_hash', 40);
             $table->string('download_url');
             $table->dateTime('published_at');
             $table->boolean('has_downloaded_release')->default(false);
@@ -21,6 +21,8 @@ return new class extends Migration {
             $table->unsignedSmallInteger('perfect_comments_count')->nullable();
             $table->unsignedSmallInteger('imperfect_comments_count')->nullable();
             $table->timestamps();
+
+            $table->unique(['repository_id', 'name']);
         });
     }
 };

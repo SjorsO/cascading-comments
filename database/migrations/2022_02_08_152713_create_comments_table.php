@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->unsignedSmallInteger('zip_index');
             $table->string('file_path');
             $table->tinyInteger('type');
-            $table->unsignedSmallInteger('starts_at_line_number');
+            $table->unsignedMediumInteger('starts_at_line_number');
             $table->tinyInteger('number_of_lines');
             $table->boolean('is_perfect');
             $table->string('text', 2000);

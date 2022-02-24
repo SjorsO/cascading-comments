@@ -23,7 +23,13 @@ class PollReleasesJob extends BaseJob
             return;
         }
 
-        $records = array_map(function (TagRecord $record) {
+        $existingReleaseNames = $this->repository->releases()->pluck('name');
+
+        $records = array_map(function (TagRecord $record) use ($existingReleaseNames) {
+            if ($existingReleaseNames->contains($record->name)) {
+                return null;
+            }
+
             $hasDownloadedRelease = Storage::exists(
                 Release::make(['commit_hash' => $record->commitHash])->zip_storage_path
             );
@@ -41,7 +47,9 @@ class PollReleasesJob extends BaseJob
             ];
         }, $releases);
 
-        $this->repository->releases()->insertOrIgnore($records);
+        $this->repository->releases()->insert(
+            array_filter($records)
+        );
 
         $this->repository->update(['last_polled_at' => now()]);
     }
