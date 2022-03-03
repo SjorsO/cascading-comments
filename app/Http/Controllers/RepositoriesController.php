@@ -6,9 +6,13 @@ use App\Models\Repository;
 
 class RepositoriesController
 {
-    public function show($owner, $name)
+    public function show($owner, $name, $version = null)
     {
         $repository = Repository::findByOwnerAndName($owner, $name);
+
+        $selectedRelease = $version
+            ? $repository->releases->firstWhere('name', $version) ?? abort(to_route('repositories.show', [$owner, $name]))
+            : $repository->releases->last();
 
         $labels = [];
         $perfectCommentsData = [];
@@ -25,6 +29,8 @@ class RepositoriesController
         return view('repository', [
             'repository' => $repository,
             'labels' => $labels,
+            'release' => $selectedRelease,
+            'releaseOptions' => $repository->releases()->pluck('name', 'id'),
             'perfectCommentsData' => $perfectCommentsData,
             'imperfectCommentsData' => $imperfectCommentsData,
             'perfectPercentage' => $perfectPercentage,

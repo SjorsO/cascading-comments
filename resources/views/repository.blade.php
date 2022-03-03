@@ -1,4 +1,4 @@
-<x-layout.template.base title="Cascading Comments">
+<x-layout.template.base title="Cascading Comments" :canonical="route('repositories.show', [$repository->owner, $repository->name])">
 
     @push('head')
         <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
@@ -13,6 +13,23 @@
     <div>
         <canvas id="chart"></canvas>
     </div>
+
+
+    <div class="flex justify-between items-center mt-4">
+        <x-h2>Cascading comments</x-h2>
+
+        <x-inputs.select label="Release"
+                         name="release"
+                         :value="$release->id"
+                         :options="$releaseOptions"
+                         x-data="{}"
+                         @change="Livewire.emit('setRelease', $event.target.value)"
+        />
+    </div>
+
+    <livewire:comments-in-release :release="$release"/>
+
+
 
     <script>
         new Chart(
