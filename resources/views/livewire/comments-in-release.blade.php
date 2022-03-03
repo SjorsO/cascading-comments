@@ -16,16 +16,18 @@
         @endif
     </div>
 
-    <div class="flex justify-between mt-4">
-        <a href="{{ $comment->github_permalink }}" class="text-blue-500" target="_blank" rel="nofollow">
-            {{ $comment->file_path }} at line {{ $comment->starts_at_line_number + 1 }}
-        </a>
+    @if($comment)
+        <div class="flex justify-between mt-4">
+            <a href="{{ $comment->github_permalink }}" class="text-blue-500" target="_blank" rel="nofollow">
+                {{ $comment->file_path }} at line {{ $comment->starts_at_line_number + 1 }}
+            </a>
 
-        @if($comment->is_perfect)
-            <div class="px-2 py-1 bg-green-500 text-white rounded text-sm">Perfect</div>
-        @endif
-    </div>
+            @if($comment->is_perfect)
+                <div class="px-2 py-1 bg-green-500 text-white rounded text-sm">Perfect</div>
+            @endif
+        </div>
 
-    <pre class="mt-4">{{ $comment->text }}</pre>
+        <pre class="mt-4">{{ $comment->text }}</pre>
+    @endif
 
 </div>
