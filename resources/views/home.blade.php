@@ -20,7 +20,7 @@
                     @if($repository->latestRelease->comments_count > 0)
                         Perfect cascading comments:
                         <br>
-                        {{ $repository->latestRelease->perfect_comments_count }} / {{ $repository->latestRelease->comments_count }} ({{ $repository->latestRelease->perfect_comment_percentage }}%)
+                       {{ $repository->latestRelease->perfect_comments_count }} / {{ $repository->latestRelease->comments_count }} ({{ $repository->latestRelease->perfect_comment_percentage }}%)
                     @else
                         This release has no cascading comments.
                     @endif

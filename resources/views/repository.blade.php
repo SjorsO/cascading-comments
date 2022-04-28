@@ -1,4 +1,4 @@
-<x-layout.template.base title="Cascading Comments">
+<x-layout.template.base title="{{ $repository->display_name }} - Cascading Comments">
 
     @push('head')
         <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>

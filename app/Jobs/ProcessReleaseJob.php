@@ -3,10 +3,8 @@
 namespace App\Jobs;
 
 use App\Models\Release;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
-use Illuminate\Support\Str;
 
-class ProcessReleaseJob extends BaseJob implements ShouldBeUnique
+class ProcessReleaseJob extends BaseJob
 {
     public function __construct(public Release $release)
     {
@@ -51,12 +49,6 @@ class ProcessReleaseJob extends BaseJob implements ShouldBeUnique
             'perfect_comments_count' => $this->release->comments()->where('is_perfect', true)->count(),
             'imperfect_comments_count' => $this->release->comments()->where('is_perfect', false)->count(),
         ]);
-    }
-
-    public function uniqueId()
-    {
-        // The "ShouldBeUnique" interface can cause the seeder to get stuck.
-        return is_production() ? $this->release->id : Str::random();
     }
 
     public static function run()
