@@ -5,4 +5,4 @@ use App\Http\Controllers\RepositoriesController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::get('/{owner}/{name}/{version?}', [RepositoriesController::class, 'show'])->name('repositories.show');
+Route::get('/{owner}/{name}', [RepositoriesController::class, 'show'])->name('repositories.show');

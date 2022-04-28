@@ -17,17 +17,30 @@
     </div>
 
     @if($comment)
-        <div class="flex justify-between mt-4">
-            <a href="{{ $comment->github_permalink }}" class="text-blue-500" target="_blank" rel="nofollow">
-                {{ $comment->file_path }} at line {{ $comment->starts_at_line_number + 1 }}
-            </a>
+        <div class="border rounded my-4 text-sm">
+            <div class="border-b bg-gray-100 px-2 py-1">
+                <div class="flex justify-between items-center">
+                    <a class="text-blue-500 hover:underline" href="{{ $comment->github_permalink }}" target="_blank" rel="nofollow">
+                        {{ $comment->file_path }} at line {{ $comment->starts_at_line_number + 1 }}
+                    </a>
 
-            @if($comment->is_perfect)
-                <div class="px-2 py-1 bg-green-500 text-white rounded text-sm">Perfect</div>
-            @endif
+                    @if($comment->is_perfect)
+                        <div class="flex items-center text-sm">
+                            Perfect
+                            <x-svg.heroicons.solid.badge-check class="ml-1 w-5 h-5 text-green-500"/>
+                        </div>
+                    @endif
+                </div>
+            </div>
+
+            <div class="px-2 py-4 font-mono overflow-x-scroll whitespace-nowrap">
+                @foreach(explode("\n", $comment->text) as $i => $line)
+                    <div>{{ $line }}</div>
+                @endforeach
+            </div>
         </div>
-
-        <pre class="mt-4">{{ $comment->text }}</pre>
     @endif
+
+    <div class="mb-32"></div>
 
 </div>

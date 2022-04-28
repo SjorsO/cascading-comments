@@ -1,4 +1,4 @@
-<x-layout.template.base title="Cascading Comments" :canonical="route('repositories.show', [$repository->owner, $repository->name])">
+<x-layout.template.base title="Cascading Comments">
 
     @push('head')
         <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
